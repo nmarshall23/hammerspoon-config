@@ -1,14 +1,10 @@
-
-
--- hs.logger.defaultLogLevel = 'debug'
-local log = hs.logger.new('config','debug')
-log.i('Initializing') -- will print "[mymodule] Initializing" to the console
-
 require("globals")
+
+ConfigLogger.i('Initializing') -- will print "[mymodule] Initializing" to the console
 require("setupSpoons")
 
 require("modules.expose")
-require("modules.windowSwitch")
+require("modules.HyperTabWindow")
 
 -- require("useful/logWindowInfo")
 -- hs.fnutils.each(hs.window.allWindows(), logWinInfo)

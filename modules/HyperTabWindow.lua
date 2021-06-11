@@ -1,4 +1,6 @@
 
+ConfigLogger.i('Initializing - HyperTabWindow')
+
 local function getCurrentScreen()
   local win = hs.window.frontmostWindow()
   local screenId = hs.screen.primaryScreen():getUUID()
@@ -28,7 +30,7 @@ local function nextWindow()
 end
 
 hs.hotkey.bind(Hyper,'tab','Next window',nextWindow, nil, function() ws1:next() end)
-hs.hotkey.bind(Hyper,'9','Prev window',function() ws1:previous() end) -- , nil, function() ws1:previous() end)
+-- hs.hotkey.bind(Hyper,'9','Prev window',function() ws1:previous() end) -- , nil, function() ws1:previous() end)
 
 
 
