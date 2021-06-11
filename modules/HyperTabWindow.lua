@@ -1,36 +1,66 @@
-
 ConfigLogger.i('Initializing - HyperTabWindow')
+do
 
-local function getCurrentScreen()
-  local win = hs.window.frontmostWindow()
-  local screenId = hs.screen.primaryScreen():getUUID()
-  if win ~= nil then
-    screenId = win:screen():getUUID()
-  end
-  -- log.i("Current ScreenId %s", screenId)
-  return screenId
+    local defaultWinFiter = hs.window.filter.new():setCurrentSpace(true)
+    local screenFilters = {}
+
+    local function updateScreens()
+        screenFilters = {}
+
+        ConfigLogger.i('Update screens')
+
+        hs.fnutils.each(hs.screen.allScreens(), function(screen)
+            local screenUUID = screen:getUUID()
+            local filterForSceen =
+                hs.window.filter.copy(defaultWinFiter):setScreens(screenUUID)
+            ConfigLogger.i('screen %s', screenUUID)
+            screenFilters[screenUUID] = hs.window.switcher.new(filterForSceen)
+        end)
+    end
+
+    local scnWatcher = hs.screen.watcher.new(updateScreens)
+
+    scnWatcher:start()
+    updateScreens()
+
+    local windowSwitcher = {}
+    local currentScreenUUID = ''
+
+    local function getCurrentScreen()
+        local win = hs.window.frontmostWindow()
+        local screenUUID = hs.screen.primaryScreen():getUUID()
+        if win ~= nil then screenUUID = win:screen():getUUID() end
+        -- log.i("Current ScreenId %s", screenId)
+        return screenUUID
+    end
+
+    local function createSwitcher(screenId)
+        local filterForSceen =
+            hs.window.filter.copy(defaultWinFiter):setScreens(screenId)
+        return hs.window.switcher.new(filterForSceen)
+    end
+
+    local function checkCurrentScreen()
+        if currentScreenUUID ~= getCurrentScreen() then
+            currentScreenUUID = getCurrentScreen()
+            windowSwitcher = screenFilters[currentScreenUUID]
+            -- windowSwitcher = createSwitcher(currentScreenUUID)
+        end
+    end
+
+    local function nextFnWindow()
+        checkCurrentScreen()
+        windowSwitcher:next()
+    end
+
+    local function prevFnWindow()
+        checkCurrentScreen()
+        -- if windowSwitcher == nil then checkCurrentScreen() end
+        windowSwitcher:previous()
+    end
+
+    hs.hotkey.bind(Hyper, 'tab', 'Next window', nextFnWindow, nil,
+                   function() windowSwitcher:next() end)
+    hs.hotkey.bind(Hyper, 'forwarddelete', 'Prev window', prevFnWindow) -- , nil, function() ws1:previous() end)
+
 end
-local wf = hs.window.filter.new():setCurrentSpace(true)
-local wf_n = hs.window.filter.copy(wf)
-
-local function createSwitcher(screenId)
-  wf_n = hs.window.filter.copy(wf):setScreens(screenId)
-  return hs.window.switcher.new(wf_n)
-end
-
-local ws1 = {}
-local currentScreenUUID = ''
-
-local function nextWindow() 
-  if currentScreenUUID ~= getCurrentScreen() then
-    currentScreenUUID = getCurrentScreen()
-    ws1 = createSwitcher(currentScreenUUID)
-  end
-  ws1:next()
-end
-
-hs.hotkey.bind(Hyper,'tab','Next window',nextWindow, nil, function() ws1:next() end)
--- hs.hotkey.bind(Hyper,'9','Prev window',function() ws1:previous() end) -- , nil, function() ws1:previous() end)
-
-
-

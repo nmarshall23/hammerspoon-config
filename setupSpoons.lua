@@ -10,14 +10,14 @@ local SpoonInstall = hs.loadSpoon("SpoonInstall")
 --     hotkeys = {
 
 --     },
---     start = true,
---     disable = true
+--     disable = true,
+--     start = true
 --   }
 -- )
 
 SpoonInstall:andUse("ReloadConfiguration", {
+    disable = true,
     start = true
-    -- disable = true
 })
 
 SpoonInstall:andUse("MiroWindowsManager", {

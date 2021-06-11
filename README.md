@@ -1,2 +1,3 @@
-# hammerspoon-config
+# Hammerspoon-Config
+
 My 🔨🥄  HammerSpoon config file
