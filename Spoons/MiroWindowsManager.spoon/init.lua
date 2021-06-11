@@ -47,7 +47,7 @@ obj.sizes = {2, 3, 3/2}
 --- The sizes that the window can have in full-screen. 
 --- The sizes are expressed as dividend of the entire screen's size.
 --- For example `{1, 4/3, 2}` means that it can be 1/1 (hence full screen), 3/4 and 1/2 of the total screen's size
-obj.fullScreenSizes = { 4/3, 2}
+obj.fullScreenSizes = {1, 4/3, 2}
 
 --- MiroWindowsManager.GRID
 --- Variable
@@ -93,11 +93,7 @@ function obj:_nextStep(dim, offs, cb)
   end
 end
 
-obj.log = hs.logger.new('config','debug')
-
 function obj:_nextFullScreenStep()
-  self.log.i("self.fullScreenSizes ")
-  self.log.i("self.fullScreenSizes", hs.inspect(self.fullScreenSizes) )
 
   if hs.window.focusedWindow() then
     local win = hs.window.frontmostWindow()
@@ -227,7 +223,7 @@ function obj:bindHotkeys(mapping)
   end)
 
   hs.hotkey.bind(mapping.fullscreen[1], mapping.fullscreen[2], function ()
-    obj._nextFullScreenStep()
+    obj:_nextFullScreenStep()
   end)
 
 end
